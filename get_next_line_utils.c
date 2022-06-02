@@ -6,7 +6,7 @@
 /*   By: afrolova <afrolova@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 22:46:56 by afrolova          #+#    #+#             */
-/*   Updated: 2022/06/01 20:27:39 by afrolova         ###   ########.fr       */
+/*   Updated: 2022/06/02 23:20:22 by afrolova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -97,6 +97,6 @@ char	*malloc_null(int i)
 	mall = malloc(sizeof(char) * (i + 1));
 	if(!mall)
 		return (NULL);
-	mall[BUFFER_SIZE] = '\0';
+	mall[0] = '\0';
 	return (mall);
 }

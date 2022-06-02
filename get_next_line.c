@@ -6,7 +6,7 @@
 /*   By: afrolova <afrolova@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 22:35:31 by afrolova          #+#    #+#             */
-/*   Updated: 2022/06/01 20:27:42 by afrolova         ###   ########.fr       */
+/*   Updated: 2022/06/02 23:20:20 by afrolova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -17,21 +17,33 @@
 //queda el residuo
 char *clean_data(char *data)
 {
+	size_t	i;
+	char	*rest;
 
+	i = 0;
+	while (data[i] != '\n' && data[i] != '\0')
+		i++;
+	if (data[i] == '\0')
+		rest = malloc_null(1);
+	rest = ft_substr(data, (i + 1), (ft_strlen(data) - i));
+//	printf("In clean: %s\n", data);
+	//printf("REST: %s", rest);
+	return (rest);
 }
 
 //coje data, y devuelve una linea que sera desde data 0 hasta '\n' INCLUIDO!! o final de data '\0'
 char *take_line(char *data)
 {
-	int 	i;
+	size_t	i;
 	char	*line;
 
 	i = 0;
 	while (data[i] != '\n' && data[i] != '\0')
 		i++;
 	if (data[i] == '\n')
-		line = ft_substr(data, 0, (i + 1));
-	line = ft_substr(data, 0, i);
+		line = ft_substr(data, 0, i + 1);
+	else
+		line = ft_substr(data, 0, i);
 	return (line);
 }
 
@@ -39,8 +51,7 @@ char *take_line(char *data)
 char	*fd_read(int fd, char *data)
 {
 	char	*str;
-	int  	num_bites;
-	//size_t	num_bites;
+	int		num_bites;
 
 	str = malloc_null(BUFFER_SIZE);
 	if (!str)
@@ -51,8 +62,13 @@ char	*fd_read(int fd, char *data)
 		num_bites = read(fd, str, BUFFER_SIZE);
 		if(num_bites > 0)
 		{	
-			//str[num_bites] = '\0';
-			data = ft_strjoin(data, str);
+			if (!data)
+			{
+				data = malloc_null(1);
+				data = ft_strjoin(data, str);
+			}
+			else
+				data = ft_strjoin(data, str);
 		}
 	}
 	if(num_bites == -1)
@@ -67,21 +83,35 @@ char	*fd_read(int fd, char *data)
 
 char *get_next_line(int fd)
 {
-	char static		*data = NULL;
-	int				i;
+	char static		*data;
 	char 			*line;
 
+//	printf("Data before_read: %s\n", data);
 	if (BUFFER_SIZE <= 0 || !fd)
 		return (NULL);
 	//Data vacio, o hay data (residuo), pero no contiene ningun salto de linea - entonces leemos mas
-	if(!data || (data && !ft_strchr(data, '\n')))
+	if ((data && !(ft_strchr(data, '\n'))) || !data)
+	{
 		data = fd_read(fd, data);
+//		printf("Data read: %s\n", data);
+	}
+/*	if (!data)
+	{
+		data = fd_read(fd, data);
+		printf("Data read_first: %s\n", data);
+	}
+	else if (data != NULL && !ft_strchr(data, '\n'))
+	{
+		data = fd_read(fd, data);
+		printf("Data read_consecutive: %s\n", data);
+	}*/
 	line = take_line(data);
 	if(!line)
 		return(NULL);
+//	printf("In get_next_lin: %s\n", data);
 	data = clean_data(data);
-	
-	return (data);
+//	printf("DATA: %s\n", data);
+	return (line);
 }
 
 int	main(void)
@@ -94,10 +124,10 @@ int	main(void)
 	fd = open("prueba.txt", O_RDONLY);
 	if (fd == -1)
 		return (0);
-	while (i < 3)
+	while (i < 7)
 	{
 		line = get_next_line(fd);
-		printf("%s", line);
+		printf("In main: %s", line);
 		i++;
 	}
 	close(fd);
