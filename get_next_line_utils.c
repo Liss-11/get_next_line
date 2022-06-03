@@ -6,13 +6,11 @@
 /*   By: afrolova <afrolova@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 22:46:56 by afrolova          #+#    #+#             */
-/*   Updated: 2022/06/02 23:20:22 by afrolova         ###   ########.fr       */
+/*   Updated: 2022/06/03 13:57:34 by afrolova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-
-//de momento no la uso
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -61,42 +59,40 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char		*mall;
-	size_t		i;
-	size_t		j;
-
-	j = 0;
-	i = 0;
-	if ((ft_strlen(s1) + ft_strlen(s2)) == 0)
-		mall = (char *)malloc(sizeof(char) * 1);
-	else
-		mall = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (mall == NULL)
-		return (NULL);
-	while (i < ft_strlen(s1) && s1[i] != '\0')
-	{
-		mall[i] = s1[i];
-		i++;
-	}
-	while ((i + j) < (ft_strlen(s1) + ft_strlen(s2) + 1)
-		&& s2[j] != '\0')
-	{
-		mall[i + j] = s2[j];
-		j++;
-	}
-	mall[i + j] = '\0';
-	return (mall);
-}
-
 char	*malloc_null(int i)
 {
 	char	*mall;
 
 	mall = malloc(sizeof(char) * (i + 1));
-	if(!mall)
+	if (!mall)
 		return (NULL);
 	mall[0] = '\0';
+	return (mall);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*mall;
+	size_t	i;
+	size_t	size_s1;
+	size_t	size_s2;
+
+	i = 0;
+	if (!s1)
+	{
+		s1 = malloc_null(0);
+	}
+	size_s1 = ft_strlen(s1);
+	size_s2 = ft_strlen(s2);
+	mall = (char *)malloc(sizeof(char) * (size_s1 + size_s2 + 1));
+	if (mall == NULL)
+		return (NULL);
+	while (i++ < size_s1)
+		mall[i - 1] = s1[i - 1];
+	i = 0;
+	while (i++ < size_s2)
+		mall[size_s1 + i - 1] = s2[i - 1];
+	mall[size_s1 + i - 1] = '\0';
+	free(s1);
 	return (mall);
 }
