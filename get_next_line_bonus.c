@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afrolova <afrolova@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/30 22:35:31 by afrolova          #+#    #+#             */
-/*   Updated: 2022/07/06 22:13:49 by afrolova         ###   ########.fr       */
+/*   Created: 2022/06/09 17:31:02 by afrolova          #+#    #+#             */
+/*   Updated: 2022/07/06 22:14:29 by afrolova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*clean_data(char *data)
 {
@@ -62,7 +62,7 @@ char	*fd_read(int fd, char *data)
 	{
 		num_bites = read(fd, str, BUFFER_SIZE);
 		if (num_bites > 0)
-		{	
+		{
 			str[num_bites] = '\0';
 			data = ft_strjoin(data, str);
 		}
@@ -78,21 +78,21 @@ char	*fd_read(int fd, char *data)
 
 char	*get_next_line(int fd)
 {
-	char static	*data;
+	char static	*data[OPEN_MAX];
 	char		*line;
 
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	if (!data || (data && !(ft_strchr(data, '\n'))))
-		data = fd_read(fd, data);
-	if (!data)
+	if (!data[fd] || (data[fd] && !(ft_strchr(data[fd], '\n'))))
+		data[fd] = fd_read(fd, data[fd]);
+	if (!data[fd])
 		return (NULL);
-	line = take_line(data);
+	line = take_line(data[fd]);
 	if (!line)
 	{
-		free(data);
+		free(data[fd]);
 		return (NULL);
 	}
-	data = clean_data(data);
+	data[fd] = clean_data(data[fd]);
 	return (line);
 }

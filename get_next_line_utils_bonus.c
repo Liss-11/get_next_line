@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afrolova <afrolova@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/31 22:46:56 by afrolova          #+#    #+#             */
-/*   Updated: 2022/07/06 22:03:51 by afrolova         ###   ########.fr       */
+/*   Created: 2022/06/09 17:32:42 by afrolova          #+#    #+#             */
+/*   Updated: 2022/07/06 22:04:01 by afrolova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -47,14 +47,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (mall);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
-	if (!s)
-		return (NULL);
 	while (*s != '\0')
 	{
-		if (*s == (char)c)
-			return ((char *)s);
+		if (*s == c)
+			return (s);
 		s++;
 	}
 	return (NULL);
@@ -64,7 +62,7 @@ char	*malloc_null(int i)
 {
 	char	*mall;
 
-	mall = malloc(sizeof(char) * (i + 1));
+	mall = (char *)malloc(sizeof(char) * (i + 1));
 	if (!mall)
 		return (NULL);
 	mall[0] = '\0';
